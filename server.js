@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 
 const app = express();
+app.use(express.static("public"));
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -16,6 +17,7 @@ const transporter = nodemailer.createTransport({
   service: "SendGrid",
   auth: {
     user: "apikey",
+    pass: process.env.SENDGRID_API_KEY,
   },
 });
 

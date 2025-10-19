@@ -1,0 +1,2 @@
+# online-business-demo
+# Full-stack e-commerce prototype built with Node.js, Express, and SendGrid integration. Features include dynamic product handling, order management, and automated email confirmations to simulate a real-world online shopping experience.
