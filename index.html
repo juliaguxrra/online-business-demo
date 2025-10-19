@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bellisa Boutique</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { margin:0; font-family:'Inter',sans-serif; background:#fdf6f0; color:#333; }
+    .container { max-width:1200px; margin:0 auto; padding:1rem; }
+    header.header { display:flex; justify-content:space-between; align-items:center; padding:1rem 0; border-bottom:1px solid #eee; }
+    .brand .logo { width:50px; height:50px; background:#f6c90e; border-radius:50%; margin-right:0.75rem; display:inline-block; }
+    .brand .title { font-weight:800; font-size:1.5rem; }
+    .brand .subtitle, header .subtitle { font-weight:400; font-size:0.9rem; color:#666; }
+    main.layout { display:flex; flex-wrap:wrap; margin-top:1rem; gap:1rem; }
+    section.panel { flex:3; min-width:300px; }
+    aside.panel.cart { flex:1; min-width:280px; background:#fff; border-radius:8px; padding:1rem; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    .filters { margin-bottom:1rem; display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .chip { padding:0.5rem 1rem; border-radius:20px; border:1px solid #ddd; cursor:pointer; font-size:0.85rem; transition:0.2s; }
+    .chip.active { background:#f6c90e; color:#fff; border-color:#f6c90e; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; }
+    .card { background:#fff; border-radius:8px; padding:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; flex-direction:column; justify-content:space-between; }
+    .thumb { width:100%; height:150px; background:#f0e5de; border-radius:6px; margin-bottom:0.5rem; position:relative; }
+    .badge { position:absolute; top:5px; right:5px; background:#f6c90e; color:#fff; padding:0.2rem 0.5rem; font-size:0.75rem; border-radius:4px; }
+    .name { font-weight:600; margin-bottom:0.25rem; }
+    .muted { font-size:0.85rem; color:#666; }
+    .row { display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; }
+    .btn { padding:0.4rem 0.8rem; border:none; border-radius:6px; cursor:pointer; font-size:0.85rem; transition:0.2s; }
+    .btn:hover { opacity:0.9; }
+    .btn.primary { background:#f6c90e; color:#fff; }
+    .btn.block { width:100%; margin-top:1rem; }
+    .cart-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+    .cart-item .qty button { margin:0 0.2rem; padding:0.2rem 0.5rem; font-weight:600; }
+    .divider { border-top:1px solid #eee; margin:0.5rem 0; }
+    .totals { display:flex; flex-direction:column; gap:0.25rem; font-size:0.9rem; }
+    .totals div { display:flex; justify-content:space-between; }
+    .checkout-form { display:grid; gap:0.5rem; margin-top:0.5rem; }
+    .field { display:flex; flex-direction:column; }
+    .field label { font-size:0.85rem; margin-bottom:0.25rem; }
+    .field input, .field select { padding:0.4rem; border:1px solid #ccc; border-radius:6px; font-size:0.85rem; }
+    .note { font-size:0.75rem; color:#999; margin-top:0.25rem; }
+    .success { margin-top:0.5rem; color:green; font-weight:600; }
+    @media(max-width:768px){ main.layout{flex-direction:column;} aside.panel.cart{order:-1;} }
+  </style>
+</head>
+<body>
+  <header class="header container">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Bellisa</div>
+        <div class="subtitle">Beautiful Handmade Jewelry</div>
+      </div>
+    </div>
+    <div class="subtitle">By Julia Guerra</div>
+  </header>
+
+  <main class="container layout">
+    <section class="panel pad">
+      <div id="filters"></div>
+      <div id="grid"></div>
+    </section>
+
+    <aside class="panel cart">
+      <h3>Cart</h3>
+      <div id="cartItems"></div>
+      <div class="divider"></div>
+      <div id="totals"></div>
+      <button id="checkoutBtn" class="btn primary block" disabled>Checkout</button>
+      <form id="checkoutForm" class="checkout-form" style="display:none">
+        <div class="field">
+          <label>Name</label>
+          <input required id="name" placeholder="User A."/>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input required id="email" placeholder="user@email.com"/>
+        </div>
+        <div class="field">
+          <label>Delivery address</label>
+          <input required id="address" placeholder="123 St, Unit X"/>
+        </div>
+        <div class="field">
+          <label>Payment</label>
+          <select id="payment" required>
+            <option value="">Select a method</option>
+            <option>Apple Pay</option>
+            <option>Visa</option>
+            <option>Mastercard</option>
+            <option>PayPal</option>
+          </select>
+        </div>
+        <div class="note">NO REAL PAYMENTS ARE PROCESSED</div>
+        <button class="btn primary">Place order</button>
+        <div id="success" class="success" style="display:none">✓ Order placed! you should have received a notification of a confirmation email. Check your spam folder if you haven't!</div>
+      </form>
+    </aside>
+  </main>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const CATEGORIES = ["All","Necklaces","Bracelets","Earrings"];
+    const INVENTORY = [
+      { id:'r-neck1', name:'Necklace A', category:'Necklaces', price:22, desc:'Description', tag:'New' },
+      { id:'r-neck2', name:'Necklace B', category:'Necklaces', price:40, desc:'Description', tag:'Bestseller' },
+      { id:'n-neck3', name:'Necklace C', category:'Necklaces', price:50, desc:'Description', tag:'New' },
+      { id:'n-nec4', name:'Necklace D', category:'Necklaces', price:60, desc:'Description' },
+      { id:'b-brace1', name:'Bracelet A', category:'Bracelets', price:22, desc:'Description' },
+      { id:'b-brace2', name:'Bracelet B', category:'Bracelets', price:40, desc:'Description' },
+      { id:'e-ear1', name:'Earring A', category:'Earrings', price:60, desc:'Description' },
+      { id:'e-ear2', name:'Earring B', category:'Earrings', price:80, desc:'Description' },
+      { id:'r-ring1', name:'Ring A', category:'Rings', price:22, desc:'Description' },
+      { id:'n-nec5', name:'Necklace E', category:'Necklaces', price:70, desc:'Bellisa exclusive', tag:'Limited' },
+    ];
+
+    const fmt = n => n.toLocaleString(undefined,{style:'currency',currency:'USD'});
+
+    function useLocalStorage(key, initial){
+      const [value,setValue] = useState(() => {
+        try{ return JSON.parse(localStorage.getItem(key)) || initial; } catch { return initial; }
+      });
+      useEffect(()=>{ localStorage.setItem(key, JSON.stringify(value)); }, [key,value]);
+      return [value,setValue];
+    }
+
+    function Filters({active,onChange}){
+      return <div className="filters">{CATEGORIES.map(c=>(
+        <span key={c} className={"chip"+(active===c?" active":"")} onClick={()=>onChange(c)}>{c}</span>
+      ))}</div>;
+    }
+
+    function ProductCard({item,onAdd}){
+      return (
+        <div className="card">
+          <div className="thumb">{item.tag && <span className="badge">{item.tag}</span>}</div>
+          <div className="name">{item.name}</div>
+          <div className="muted">{item.desc}</div>
+          <div className="row">
+            <div className="price">{fmt(item.price)}</div>
+            <button className="btn" onClick={()=>onAdd(item)}>Add</button>
+          </div>
+        </div>
+      );
+    }
+
+    function CartItem({line,onInc,onDec,onRemove}){
+      return (
+        <div className="cart-item">
+          <div>
+            <div style={{fontWeight:700}}>{line.item.name}</div>
+            <div className="muted" style={{fontSize:'.85rem'}}>{fmt(line.item.price)} × {line.qty}</div>
+          </div>
+          <div className="qty">
+            <button className="btn" onClick={onDec}>−</button>
+            <span style={{minWidth:22,textAlign:'center'}}>{line.qty}</span>
+            <button className="btn" onClick={onInc}>+</button>
+            <button className="btn" onClick={onRemove}>✕</button>
+          </div>
+        </div>
+      );
+    }
+
+    function App(){
+      const [cat,setCat] = useState('All');
+      const [cart,setCart] = useLocalStorage('bellisa:cart',[]);
+      const [step,setStep] = useState('browse');
+
+      const items = useMemo(()=>cat==='All'?INVENTORY:INVENTORY.filter(i=>i.category===cat),[cat]);
+
+      const add = item=>setCart(prev=>{
+        const found=prev.find(l=>l.item.id===item.id);
+        return found? prev.map(l=>l.item.id===item.id? {...l,qty:l.qty+1}:l) : [...prev,{item,qty:1}];
+      });
+
+      const inc=id=>setCart(prev=>prev.map(l=>l.item.id===id? {...l,qty:l.qty+1}:l));
+      const dec=id=>setCart(prev=>prev.flatMap(l=>l.item.id===id? (l.qty>1?[{...l,qty:l.qty-1}]:[]):[l]));
+      const removeLine=id=>setCart(prev=>prev.filter(l=>l.item.id!==id));
+
+      const subtotal=cart.reduce((s,l)=>s+l.item.price*l.qty,0);
+      const delivery=cart.length?4.99:0;
+      const tax=cart.length?subtotal*0.06:0;
+      const total=subtotal+delivery+tax;
+
+      useEffect(()=>{
+        const btn=document.getElementById('checkoutBtn');
+        const form=document.getElementById('checkoutForm');
+        const success=document.getElementById('success');
+
+        if(step==='browse'){
+          form.style.display='none'; success.style.display='none';
+          btn.disabled=cart.length===0; btn.onclick=()=>setStep('checkout');
+        } else if(step==='checkout'){
+          form.style.display='grid'; success.style.display='none';
+          btn.disabled=true; btn.onclick=null;
+
+          form.onsubmit=async e=>{
+            e.preventDefault();
+            const orderData={
+              customer:{
+                name:document.getElementById('name').value,
+                email:document.getElementById('email').value,
+                address:document.getElementById('address').value,
+                payment:document.getElementById('payment').value
+              },
+              cart,
+              totals:{subtotal,delivery,tax,total},
+              placedAt:new Date().toISOString()
+            };
+            try{
+              const res=await fetch('http://localhost:4000/api/orders',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify(orderData)
+              });
+              const data=await res.json();
+              console.log('Server response:',data);
+              success.style.display='block';
+              setCart([]);
+              setStep('placed');
+            }catch(err){
+              alert('❌ Failed to send order: '+err.message);
+            }
+          };
+        }
+      },[step,cart.length,setCart]);
+
+      return <>
+        <Filters active={cat} onChange={setCat} />
+        <div className="grid">{items.map(item=><ProductCard key={item.id} item={item} onAdd={add} />)}</div>
+        {ReactDOM.createPortal(
+          <>
+            <div className="cart-items">
+              {cart.length===0 && <div className="muted">Your cart is empty. Add some sparkle ✨</div>}
+              {cart.map(line=>(
+                <CartItem key={line.item.id} line={line} onInc={()=>inc(line.item.id)} onDec={()=>dec(line.item.id)} onRemove={()=>removeLine(line.item.id)} />
+              ))}
+            </div>
+            <div className="divider"/>
+            <div className="totals">
+              <div><span className="muted">Subtotal</span><span>{fmt(subtotal)}</span></div>
+              <div><span className="muted">Delivery</span><span>{fmt(delivery)}</span></div>
+              <div><span className="muted">Tax (6%)</span><span>{fmt(tax)}</span></div>
+              <div style={{fontWeight:800}}><span>Total</span><span>{fmt(total)}</span></div>
+            </div>
+          </>,
+          document.getElementById('cartItems').parentElement
+        )}
+      </>;
+    }
+
+    ReactDOM.createRoot(document.getElementById('grid').parentElement).render(<App/>);
+  </script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+/* --------------------- Base --------------------- */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #fff8f2;
+  color: #3b3a36;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* ------------------- Header -------------------- */
+header.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0e5de;
+}
+
+.brand .logo {
+  width: 50px;
+  height: 50px;
+  background: #f6c90e;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.brand .title {
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: #3b3a36;
+}
+
+.brand .subtitle,
+header .subtitle {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #a78b6f;
+}
+
+/* ------------------- Layout -------------------- */
+main.layout {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+section.panel {
+  flex: 3;
+  min-width: 300px;
+}
+
+aside.panel.cart {
+  flex: 1;
+  min-width: 280px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ------------------- Filters ------------------ */
+.filters {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #e0d4c9;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: 0.2s;
+  background: #fff5f0;
+  color: #6b4f3b;
+}
+
+.chip.active {
+  background: #f6c90e;
+  color: #fff;
+  border-color: #f6c90e;
+}
+
+/* ------------------- Grid & Cards ---------------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: #fffaf5;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.thumb {
+  width: 100%;
+  height: 150px;
+  background: #f0e5de;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #f6c90e;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+}
+
+.name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #3b3a36;
+}
+
+.muted {
+  font-size: 0.85rem;
+  color: #a78b6f;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.price {
+  font-weight: 600;
+  color: #6b4f3b;
+}
+
+/* ------------------- Buttons ------------------ */
+.btn {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: 0.2s;
+  background: #f6c90e;
+  color: #fff;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn.primary {
+  background: #f6c90e;
+  color: #fff;
+}
+
+.btn.block {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* ------------------- Cart --------------------- */
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.cart-item .qty button {
+  margin: 0 0.2rem;
+  padding: 0.2rem 0.5rem;
+  font-weight: 600;
+}
+
+.divider {
+  border-top: 1px solid #eee;
+  margin: 0.5rem 0;
+}
+
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.totals div {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ------------------- Form --------------------- */
+.checkout-form {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  color: #6b4f3b;
+}
+
+.field input,
+.field select {
+  padding: 0.5rem;
+  border: 1px solid #e0d4c9;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  background: #fff8f2;
+}
+
+.note {
+  font-size: 0.75rem;
+  color: #a78b6f;
+  margin-top: 0.25rem;
+}
+
+.success {
+  margin-top: 0.5rem;
+  color: #3bb54a;
+  font-weight: 600;
+}
+
+/* ------------------- Responsive ---------------- */
+@media(max-width:768px){
+  main.layout { flex-direction: column; }
+  aside.panel.cart { order:-1; }
+}
